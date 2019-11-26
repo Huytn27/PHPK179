@@ -1,0 +1,3 @@
+
+    Nếu muốn xuất giá trị của biến ra trang web thì sẽ dùng dấu nháy kép.
+    Còn nếu muốn xuất ra các tag HTML, thì sẽ dùng dấu nháy đơn.
