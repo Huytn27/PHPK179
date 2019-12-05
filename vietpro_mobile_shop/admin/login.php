@@ -28,7 +28,13 @@ if(!defined('SECURITY')){
 	if(isset($_POST['sbm'])){
 		$mail = $_POST['mail'];
 		$pass = $_POST['pass'];
-		if($mail == 'admin@gmail.com' && $pass =='123456'){
+		$sql = "SELECT * FROM user
+		WHERE user_mail = '$mail'
+		AND user_pass = '$pass'";
+		$query = mysqli_query($connect, $sql);
+		$num_rows = mysqli_num_rows($query);
+		//print_r($num_rows);
+		if($num_rows > 0){
 			$_SESSION['mail'] = $mail;
 			$_SESSION['pass'] = $pass;
 			header('location: index.php');

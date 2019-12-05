@@ -1,4 +1,8 @@
-
+<?php
+if(!defined('SECURITY')){
+	die('Bạn không có quyền truy cập file này!');
+}
+?>
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
@@ -37,30 +41,27 @@
 						    </tr>
                             </thead>
                             <tbody>
+                            <?php
+                            $sql = "SELECT * FROM product
+                            INNER JOIN category ON product.cat_id=category.cat_id
+                            ORDER BY prd_id DESC";
+                            $query = mysqli_query($connect, $sql);
+                            while($row = mysqli_fetch_assoc($query)){
+                            ?>
                                     <tr>
-                                        <td style="">1</td>
-                                        <td style="">Sản phẩm số 1</td>
-                                        <td style="">18.500.000 vnd</td>
-                                        <td style="text-align: center"><img width="130" height="180" src="img/download.jpeg" /></td>
-                                        <td><span class="label label-success">Còn hàng</span></td>
-                                        <td>Danh mục số 1</td>
+                                        <td style=""><?php echo $row['prd_id']; ?></td>
+                                        <td style=""><?php echo $row['prd_name']; ?></td>
+                                        <td style=""><?php echo $row['prd_price']; ?> vnd</td>
+                                        <td style="text-align: center"><img width="130" height="180" src="img/products/<?php echo $row['prd_image']; ?>" /></td>
+                                        <td><span class="label <?php if($row['prd_status']==1){echo 'label-success';}else{echo 'label-danger';} ?>">
+                                        <?php if($row['prd_status']==1){echo 'Còn hàng';}else{echo 'Hết hàng';} ?></span></td>
+                                        <td><?php echo $row['cat_name']; ?></td>
                                         <td class="form-group">
                                             <a href="product-edit.html" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
                                             <a href="product-edit.html" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
                                         </td>
                                     </tr>
-                                    <tr>
-                                            <td style="">1</td>
-                                            <td style="">Sản phẩm số 2</td>
-                                            <td style="">18.500.000 vnd</td>
-                                            <td style="text-align: center"><img width="130" height="180" src="img/download.jpeg" /></td>
-                                            <td><span class="label label-danger">Hết hàng</span></td>
-                                            <td>Danh mục số 1</td>
-                                            <td class="form-group">
-                                                <a href="product-edit.html" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                <a href="product-edit.html" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
-                                            </td>
-                                        </tr>
+                                    <?php } ?>
                                  </tbody>
 						</table>
                     </div>
