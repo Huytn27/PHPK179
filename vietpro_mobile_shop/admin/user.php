@@ -1,4 +1,8 @@
-
+<?php
+if(!defined('SECURITY')){
+	die('Bạn không có quyền truy cập file này!');
+}
+?>
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
@@ -35,26 +39,23 @@
 						    </tr>
                             </thead>
                             <tbody>
+                            <?php
+                            $sql = "SELECT * FROM user ORDER BY user_id ASC";
+                            $query = mysqli_query($connect, $sql);
+                            while($row = mysqli_fetch_array($query)){
+                            ?>
                                 <tr>
-                                    <td style="">1</td>
-                                    <td style="">Admin</td>
-                                    <td style="">admin@gmail.com</td>
-                                    <td><span class="label label-danger">Admin</span></td>
+                                    <td style=""><?php echo $row['user_id']; ?></td>
+                                    <td style=""><?php echo $row['user_full']; ?></td>
+                                    <td style=""><?php echo $row['user_mail']; ?></td>
+                                    <td><span class="label <?php if($row['user_level']==1){echo 'label-danger';}else{echo 'label-success';} ?>">
+                                    <?php if($row['user_level']==1){echo 'Admin';}else{echo 'Member';} ?></span></td>
                                     <td class="form-group">
                                         <a href="thanhvien-edit.html" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
                                         <a href="/" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
                                     </td>
                                 </tr>
-                                <tr>
-                                        <td style="">2</td>
-                                        <td style="">Nguyễn Văn A</td>
-                                        <td style="">nguyenvana@gmail.com</td>
-                                        <td><span class="label label-warning">Member</span></td>
-                                        <td class="form-group">
-                                            <a href="thanhvien-edit.html" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                                            <a href="/" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
-                                        </td>
-                                    </tr>
+                                <?php } ?>
                             </tbody>
 						</table>
                     </div>

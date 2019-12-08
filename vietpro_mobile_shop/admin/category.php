@@ -1,4 +1,8 @@
-
+<?php
+if(!defined('SECURITY')){
+	die('Bạn không có quyền truy cập file này!');
+}
+?>
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
@@ -33,22 +37,20 @@
 									</tr>
 									</thead>
 									<tbody>
+									<?php
+									$sql = "SELECT * FROM category ORDER BY cat_id ASC";
+									$query = mysqli_query($connect, $sql);
+									while($row = mysqli_fetch_assoc($query)){
+									?>
 										<tr>
-											<td style="">1</td>
-											<td style="">Danh mục 1</td>
+											<td style=""><?php echo $row['cat_id']; ?></td>
+											<td style=""><?php echo $row['cat_name']; ?></td>
 											<td class="form-group">
 												<a href="/" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
 												<a href="/" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
 											</td>
 										</tr>
-										<tr>
-											<td style="">2</td>
-											<td style="">Danh mục 2</td>
-											<td class="form-group">
-												<a href="/" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-												<a href="/" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
-											</td>
-										</tr>
+									<?php } ?>
 									</tbody>
 								</table>
 							</div>

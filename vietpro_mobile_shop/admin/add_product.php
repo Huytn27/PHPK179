@@ -1,4 +1,42 @@
-
+<?php
+if(!defined('SECURITY')){
+	die('Bạn không có quyền truy cập file này!');
+}
+$sql = "SELECT * FROM category ORDER BY cat_id ASC";
+$query = mysqli_query($connect, $sql);
+//kiểm tra form submit
+if(isset($_POST['sbm'])){
+    $prd_name = $_POST['prd_name'];
+    $prd_price = $_POST['prd_price'];
+    $prd_warranty = $_POST['prd_warranty'];
+    $prd_accessories = $_POST['prd_accessories'];
+    $prd_promotion = $_POST['prd_promotion'];
+    $prd_new = $_POST['prd_new'];
+    //ảnh
+    $prd_image = $_FILES['prd_image']['name'];
+    $tmp_name_image = $_FILES['prd_image']['tmp_name'];
+    //
+    $cat_id = $_POST['cat_id'];
+    $prd_status = $_POST['prd_status'];
+    //check box
+    if(isset($_POST['prd_featured'])){
+        $prd_featured = $_POST['prd_featured'];
+    }else{
+        $prd_featured = 0;
+    }
+    //
+    $prd_details = $_POST['prd_details'];
+    $sql = "INSERT INTO product(prd_name, prd_price, prd_warranty, prd_accessories, prd_promotion, 
+    prd_new, prd_image, cat_id, prd_status, prd_featured, prd_details)
+    VALUES('$prd_name', '$prd_price', '$prd_warranty', '$prd_accessories', '$prd_promotion', 
+    '$prd_new', '$prd_image', '$cat_id', '$prd_status', '$prd_featured', '$prd_details')";
+    $query = mysqli_query($connect, $sql);
+    //up ảnh lên server
+    move_uploaded_file($tmp_name_image, 'img/products/'.$prd_image);
+    //chuyển hướng
+    header('location: index.php?page_layout=product');
+}
+?>
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
@@ -21,7 +59,7 @@
                                 <form role="form" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label>Tên sản phẩm</label>
-                                    <input required name="prd_name" class="form-control" placeholder="">
+                                    <input required="" name="prd_name" class="form-control" placeholder="">
                                 </div>
                                                                 
                                 <div class="form-group">
@@ -59,10 +97,9 @@
                                 <div class="form-group">
                                     <label>Danh mục</label>
                                     <select name="cat_id" class="form-control">
-                                        <option value=1>iPhone</option>
-                                        <option value=2>Samsung</option>
-                                        <option value=3>Nokia</option>
-                                        <option value=4>LG</option>
+                                        <?php while($row = mysqli_fetch_assoc($query)){ ?>
+                                        <option value=<?php echo $row['cat_id']; ?>><?php echo $row['cat_name']; ?></option>
+                                        <?php } ?>
                                     </select>
                                 </div>
                                 
