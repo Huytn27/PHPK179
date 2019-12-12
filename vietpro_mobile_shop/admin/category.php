@@ -17,7 +17,7 @@ if(!defined('SECURITY')){
 			</div>
 		</div><!--/.row-->
 		<div id="toolbar" class="btn-group">
-            <a href="category-add.html" class="btn btn-success">
+            <a href="index.php?page_layout=add_category" class="btn btn-success">
                 <i class="glyphicon glyphicon-plus"></i> Thêm danh mục
             </a>
         </div>

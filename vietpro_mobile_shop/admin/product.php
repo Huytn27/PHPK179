@@ -3,6 +3,12 @@ if(!defined('SECURITY')){
 	die('Bạn không có quyền truy cập file này!');
 }
 ?>
+<script>
+function delItem(name)
+{
+return confirm('bạn muốn xóa sản phẩm: '+name+' ?');
+}
+</script>
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
@@ -57,8 +63,8 @@ if(!defined('SECURITY')){
                                         <?php if($row['prd_status']==1){echo 'Còn hàng';}else{echo 'Hết hàng';} ?></span></td>
                                         <td><?php echo $row['cat_name']; ?></td>
                                         <td class="form-group">
-                                            <a href="product-edit.html" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                                            <a href="product-edit.html" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                                            <a href="index.php?page_layout=edit_product&prd_id=<?php echo $row['prd_id']; ?>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+                                            <a onclick="return delItem('<?php echo $row['prd_name'];?>')" href="del_product.php?prd_id=<?php echo $row['prd_id']; ?>" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
                                         </td>
                                     </tr>
                                     <?php } ?>

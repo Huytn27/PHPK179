@@ -1,4 +1,52 @@
-
+<?php 
+if(!defined('SECURITY')){
+	die('Bạn không có quyền truy cập file này!');
+}
+//truy vấn ht danh sách sp cũ
+$prd_id = $_GET['prd_id'];
+$sql = "SELECT * FROM product WHERE prd_id=$prd_id";
+$query = mysqli_query($connect, $sql);
+$row = mysqli_fetch_assoc($query);
+//truy vấn hiển thị danh mục
+$sql_cat = "SELECT * FROM category ORDER BY cat_id ASC";
+$query_cat = mysqli_query($connect, $sql_cat);
+//kiểm tra submit
+if(isset($_POST['sbm'])){
+    $prd_name = $_POST['prd_name'];
+    $prd_price = $_POST['prd_price'];
+    $prd_warranty = $_POST['prd_warranty'];
+    $prd_accessories = $_POST['prd_accessories'];
+    $prd_promotion = $_POST['prd_promotion'];
+    $prd_new = $_POST['prd_new'];
+    //ảnh
+    if($_FILES['prd_image']['name']==''){
+        $prd_image = $row['prd_image'];
+    }else{
+        $prd_image = $_FILES['prd_image']['name'];
+        $tmp_name_image = $_FILES['prd_image']['tmp_name'];
+        move_uploaded_file($tmp_name_image, 'img/products/'.$prd_image);
+    }
+    //
+    $cat_id = $_POST['cat_id'];
+    $prd_status = $_POST['prd_status'];
+    //check box
+    if(isset($_POST['prd_featured'])){
+        $prd_featured = $_POST['prd_featured'];
+    }else{
+        $prd_featured = 0;
+    }
+    //
+    $prd_details = $_POST['prd_details'];
+    $sql = "UPDATE product
+    SET prd_name='$prd_name', prd_price='$prd_price', prd_warranty='$prd_warranty', 
+    prd_accessories='$prd_accessories', prd_promotion='$prd_promotion', prd_new='$prd_new', 
+    prd_image='$prd_image', cat_id='$cat_id', prd_status='$prd_status', 
+    prd_featured='$prd_featured', prd_details='$prd_details'
+    WHERE prd_id=$prd_id";
+    $query = mysqli_query($connect, $sql);
+    header('location: index.php?page_layout=product');
+}
+?>
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
@@ -21,55 +69,55 @@
                                 <form role="form" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label>Tên sản phẩm</label>
-                                    <input type="text" name="prd_name" required class="form-control" value="Sản phẩm số 1"  placeholder="">
+                                    <input type="text" name="prd_name" required class="form-control" value="<?php echo $row['prd_name']; ?>"  placeholder="">
                                 </div>
                                                                 
                                 <div class="form-group">
                                     <label>Giá sản phẩm</label>
-                                    <input type="number" name="prd_price" required value="18500000" class="form-control">
+                                    <input type="number" name="prd_price" required value="<?php echo $row['prd_price']; ?>" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label>Bảo hành</label>
-                                    <input type="text" name="prd_warranty" required value="12 tháng" class="form-control">
+                                    <input type="text" name="prd_warranty" required value="<?php echo $row['prd_warranty']; ?>" class="form-control">
                                 </div>    
                                 <div class="form-group">
                                     <label>Phụ kiện</label>
-                                    <input type="text" name="prd_accessories" required value="Xạc, Tai nghe..." class="form-control">
+                                    <input type="text" name="prd_accessories" required value="<?php echo $row['prd_accessories']; ?>" class="form-control">
                                 </div>                  
                                 <div class="form-group">
                                     <label>Khuyến mãi</label>
-                                    <input type="text" name="prd_promotion" required value="Xạc dự phòng" class="form-control">
+                                    <input type="text" name="prd_promotion" required value="<?php echo $row['prd_promotion']; ?>" class="form-control">
                                 </div>  
                                 <div class="form-group">
                                     <label>Tình trạng</label>
-                                    <input type="text" name="prd_new" required value="Like new 99%" type="text" class="form-control">
+                                    <input type="text" name="prd_new" required value="<?php echo $row['prd_new']; ?>" type="text" class="form-control">
                                 </div>  
                                 
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Ảnh sản phẩm</label>
-                                    <input type="file" name="prd_image" required>
+                                    <input type="file" name="prd_image">
                                     <br>
                                     <div>
-                                        <img src="img/download.jpeg">
+                                        <img src="img/products/<?php echo $row['prd_image']; ?>">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label>Danh mục</label>
                                     <select name="cat_id" class="form-control">
-                                        <option selected value=1>iPhone</option>
-                                        <option value=2>Samsung</option>
-                                        <option value=3>Nokia</option>
-                                        <option value=4>LG</option>
+                                        <?php while($row_cat = mysqli_fetch_assoc($query_cat)){ ?>
+                                        <option <?php if($row_cat['cat_id']==$row['cat_id']){echo 'selected';} ?> 
+                                        value = <?php echo $row_cat['cat_id']; ?>><?php echo $row_cat['cat_name']; ?></option>
+                                        <?php } ?>
                                     </select>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label>Trạng thái</label>
                                     <select name="prd_status" class="form-control">
-                                        <option selected value=1>Còn hàng</option>
-                                        <option value=2>Hết hàng</option>
+                                        <option <?php if($row['prd_status']==1){echo 'selected';} ?> value=1>Còn hàng</option>
+                                        <option <?php if($row['prd_status']==0){echo 'selected';} ?> value=2>Hết hàng</option>
                                     </select>
                                 </div>
                                 
@@ -77,13 +125,13 @@
                                     <label>Sản phẩm nổi bật</label>
                                     <div class="checkbox">
                                         <label>
-                                            <input name="prd_featured" type="checkbox" value=1>Nổi bật
+                                            <input <?php if($row['prd_featured']==1){echo 'checked';} ?> name="prd_featured" type="checkbox" value=1>Nổi bật
                                         </label>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                         <label>Mô tả sản phẩm</label>
-                                        <textarea name="prd_details" required class="form-control" rows="3"></textarea>
+                                        <textarea name="prd_details" required class="form-control" rows="3"><?php echo $row['prd_details']; ?></textarea>
                                     </div>
                                 <button type="submit" name="sbm" class="btn btn-primary">Cập nhật</button>
                                 <button type="reset" class="btn btn-default">Làm mới</button>
