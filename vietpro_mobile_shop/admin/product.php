@@ -2,6 +2,42 @@
 if(!defined('SECURITY')){
 	die('Bạn không có quyền truy cập file này!');
 }
+//Phân trang
+//Hứng tham số từ URL
+if(isset($_GET['page'])){
+    $page = $_GET['page'];
+}else{
+    $page = 1;
+}
+//gán số sp cần hiển thị trên 1 trang
+$rows_per_page = 5;
+//công thức
+$per_rows = $page * $rows_per_page - $rows_per_page;
+//tính toán số bản ghi
+$total_rows = mysqli_num_rows(mysqli_query($connect, "SELECT * FROM product"));
+$total_pages = ceil($total_rows/$rows_per_page); // hàm làm tròn trong php
+//Nút prev trang
+$list_pages = '';
+$page_prev = $page -1;
+if($page_prev <= 0){
+    $page_prev =1;
+}
+$list_pages .= '<li class="page-item"><a class="page-link" href="index.php?page_layout=product&page='.$page_prev.'">&laquo;</a></li>';
+//Tính toán số trang
+for($i=1; $i<=$total_pages; $i++){
+    if($i==$page){
+        $active = 'active';
+    }else{
+        $active = '';
+    }
+    $list_pages .= '<li class="page-item '.$active.'"><a class="page-link" href="index.php?page_layout=product&page='.$i.'">'.$i.'</a></li>';
+}
+//next pages
+$page_next = $page + 1;
+if($page_next > $total_pages){
+    $page_next = $total_pages;
+}
+$list_pages .= '<li class="page-item"><a class="page-link" href="index.php?page_layout=product&page='.$page_next.'">&raquo;</a></li>';
 ?>
 <script>
 function delItem(name)
@@ -50,7 +86,7 @@ return confirm('bạn muốn xóa sản phẩm: '+name+' ?');
                             <?php
                             $sql = "SELECT * FROM product
                             INNER JOIN category ON product.cat_id=category.cat_id
-                            ORDER BY prd_id DESC";
+                            ORDER BY prd_id DESC LIMIT $per_rows, $rows_per_page";
                             $query = mysqli_query($connect, $sql);
                             while($row = mysqli_fetch_assoc($query)){
                             ?>
@@ -74,11 +110,7 @@ return confirm('bạn muốn xóa sản phẩm: '+name+' ?');
                     <div class="panel-footer">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                                <?php echo $list_pages; ?>
                             </ul>
                         </nav>
                     </div>
