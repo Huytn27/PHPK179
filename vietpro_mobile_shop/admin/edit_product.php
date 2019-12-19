@@ -47,6 +47,7 @@ if(isset($_POST['sbm'])){
     header('location: index.php?page_layout=product');
 }
 ?>
+<script src="ckeditor/ckeditor.js"></script>
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
@@ -132,6 +133,7 @@ if(isset($_POST['sbm'])){
                                 <div class="form-group">
                                         <label>Mô tả sản phẩm</label>
                                         <textarea name="prd_details" required class="form-control" rows="3"><?php echo $row['prd_details']; ?></textarea>
+                                        <script>CKEDITOR.replace('prd_details');</script>
                                     </div>
                                 <button type="submit" name="sbm" class="btn btn-primary">Cập nhật</button>
                                 <button type="reset" class="btn btn-default">Làm mới</button>
